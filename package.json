@@ -1,0 +1,8 @@
+{
+  "name": "card-cockpit",
+  "version": "1.0.0",
+  "description": "COMC -> SlabSharks flip tracker: calculator, live auctions, locked predictions",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
