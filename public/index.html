@@ -1,320 +1,305 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Card Cockpit</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css" />
 <style>
 :root{
-  --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2a2f3a; --line2:#3a4150;
-  --txt:#e6e8ee; --mut:#9aa3b2; --dim:#6b7280;
-  --grn:#4ade80; --red:#f87171; --amb:#fbbf24; --acc:#60a5fa; --accbg:#12233d;
-  --send:#0e2a1a; --skip:#2a1414;
+  --bg:#0e0f11; --surface:#16181c; --surface2:#1c1f24; --line:#2a2e35;
+  --text:#e8eaed; --muted:#9aa0a8; --dim:#6b7178;
+  --accent:#22ff88; --accent-ink:#04130a;
+  --good:#22ff88; --warn:#f5b34a; --bad:#ff6b6b; --radius:10px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-a{color:var(--acc)}
-.wrap{max-width:1240px;margin:0 auto;padding:20px}
-h1{font-size:20px;font-weight:600;margin:0}
-h2{font-size:14px;font-weight:600;margin:0 0 12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-.sub{color:var(--dim);font-size:12px;margin-top:2px}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 22px 80px}
+h1{font-size:22px;font-weight:600;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 0}
+a{color:inherit}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0 8px}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.tile .k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-.tile .v{font-size:24px;font-weight:600;margin-top:4px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:16px}
-input,select{background:var(--panel2);border:1px solid var(--line2);color:var(--txt);border-radius:8px;padding:7px 9px;font:inherit;outline:none}
-input:focus,select:focus{border-color:var(--acc)}
-input.num{width:86px;text-align:right}
-input.wide{min-width:200px;flex:1}
-button{background:var(--panel2);border:1px solid var(--line2);color:var(--txt);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
-button:hover{border-color:var(--acc)}
-button.primary{background:var(--accbg);border-color:#2c4c78;color:#bcd6ff}
-button.x{border-color:transparent;color:var(--dim);padding:4px 8px}
-button.x:hover{color:var(--red);border-color:var(--red)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;color:var(--mut);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap}
-td{padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-td.name{white-space:normal;min-width:180px}
-.twrap{overflow-x:auto}
-.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
-.send{background:var(--send);color:var(--grn)}
-.skip{background:var(--skip);color:var(--red)}
-.pos{color:var(--grn)} .neg{color:var(--red)} .mut{color:var(--mut)}
-.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;align-items:end}
-.fld{display:flex;flex-direction:column;gap:5px}
-.fld label{font-size:11px;color:var(--mut)}
-.big{font-size:22px;font-weight:600}
-.verdictbox{border-radius:10px;padding:12px 14px;border:1px solid var(--line)}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-.tag{font-size:11px;color:var(--dim)}
-.saved{font-size:11px;color:var(--grn);opacity:0;transition:opacity .3s}
-.saved.on{opacity:1}
-details summary{cursor:pointer;color:var(--mut);font-size:12px}
-.addrow td{background:var(--panel2)}
-select.status{padding:5px 7px}
+.spread{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.tile .k{color:var(--muted);font-size:12px;letter-spacing:.03em;text-transform:lowercase}
+.tile .v{font-size:26px;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .v.good{color:var(--good)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.card h2{font-size:15px;font-weight:600;margin:0 0 14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+input,select{background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;width:100%}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+button{background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button:hover{border-color:var(--accent);color:var(--text)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.ghost{background:transparent}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.listed{color:var(--accent);border-color:var(--accent)}
+.pill.sold{color:var(--dim)}
+.pill.scheduled{color:var(--text)}
+.pill.queued{color:var(--warn);border-color:var(--warn)}
+.verdict-send{color:var(--good);font-weight:600}
+.verdict-keep{color:var(--warn);font-weight:600}
+.g{color:var(--good)} .r{color:var(--bad)} .m{color:var(--muted)}
+.mini{font-size:11px;color:var(--dim)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.tablewrap table th:first-child,.tablewrap table td:first-child{padding-left:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.filters input,.filters select{width:auto;min-width:140px}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px;vertical-align:1px}
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:16px}
+.calc-out .k{color:var(--muted);font-size:12px}
+.calc-out .v{font-size:20px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+.editrow input,.editrow select{font-size:12.5px;padding:5px 7px}
+.link{color:var(--accent);text-decoration:none;font-size:12px}
+.savestate{font-size:12px;color:var(--dim)}
+.savestate.syncing{color:var(--warn)}
+.savestate.ok{color:var(--good)}
+@media(max-width:640px){.wrap{padding:18px 14px 60px}.tile .v{font-size:22px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="row" style="justify-content:space-between">
+  <div class="spread">
     <div>
       <h1>Card Cockpit</h1>
-      <div class="sub">COMC → SlabSharks flip tracker · fee model locked from receipts · <span class="saved" id="saved">saved ✓</span></div>
+      <p class="sub">COMC &rarr; SlabSharks flip tracker &middot; synced to Supabase &middot; <span id="savestate" class="savestate">connecting&hellip;</span></p>
     </div>
-    <div class="tag" id="stamp"></div>
+    <div class="row">
+      <button class="ghost" id="refreshBtn"><i class="ti ti-refresh"></i> refresh</button>
+      <button class="ghost" id="addCardBtn"><i class="ti ti-plus"></i> add card</button>
+    </div>
   </div>
 
   <div class="tiles" id="tiles"></div>
 
   <div class="card">
     <h2>Send-or-skip calculator</h2>
-    <div class="calc">
-      <div class="fld"><label>Expected SlabSharks hammer (CAD)</label><input id="calcHammer" class="num" style="width:100%" type="number" value="30" step="1"></div>
-      <div class="fld"><label>COMC comp / last sale (USD)</label><input id="calcComp" class="num" style="width:100%" type="number" value="5" step="0.5"></div>
-      <div class="verdictbox" id="calcOut"></div>
-    </div>
-    <div class="sub" style="margin-top:10px">SlabSharks net = hammer − 20% − ($3 flat if under $50) − $<span id="expLbl"></span> export. COMC net = (comp − fee) × <span id="fxLbl"></span>. Send when SS net beats COMC net.</div>
-  </div>
-
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <h2 style="margin:0">Live at auction</h2>
-      <button id="refreshBids">reload bids ↻</button>
-    </div>
-    <div id="liveBody"></div>
-  </div>
-
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <h2 style="margin:0">Cards</h2>
-      <div class="tag">click a header to sort · edits autosave</div>
-    </div>
-    <div class="filters">
-      <input id="search" placeholder="search name / player" class="wide" style="max-width:260px">
-      <select id="fStatus"><option value="">all statuses</option><option>queued</option><option>shipped</option><option>listed</option><option>sold</option><option>unsold</option></select>
-      <select id="fPlayer"><option value="">all players</option></select>
-      <span style="flex:1"></span>
-      <button class="primary" id="addCard">+ add card</button>
-    </div>
-    <div class="twrap"><table id="cardsTbl">
-      <thead><tr>
-        <th data-k="name">Card</th><th data-k="player">Player</th>
-        <th data-k="comcCompUSD">COMC $ (US)</th><th data-k="expectedHammerCAD">Exp hammer (C$)</th>
-        <th data-k="verdict">Verdict</th><th data-k="status">Status</th>
-        <th data-k="soldPriceCAD">Sold (C$)</th><th data-k="ssNet">SS net (C$)</th>
-        <th data-k="edge">vs COMC</th><th></th>
-      </tr></thead>
-      <tbody id="cardsBody"></tbody>
-    </table></div>
-  </div>
-
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <h2 style="margin:0">Shipments</h2>
-      <button class="primary" id="addShip">+ add shipment</button>
-    </div>
-    <div class="twrap"><table>
-      <thead><tr><th>Date</th><th>Cards</th><th>Service</th><th>Declared</th><th>Cost</th><th>$/card</th><th>Tracking</th><th>Status</th><th></th></tr></thead>
-      <tbody id="shipBody"></tbody>
-    </table></div>
-  </div>
-
-  <div class="card">
-    <details>
-      <summary>Fee settings (advanced) — change only if your real numbers shift</summary>
-      <div class="row" style="margin-top:12px">
-        <div class="fld"><label>Export cost / card (CAD)</label><input id="setExport" class="num" type="number" step="0.25"></div>
-        <div class="fld"><label>USD→CAD extraction</label><input id="setFx" class="num" type="number" step="0.01"></div>
-        <div class="fld"><label>SlabSharks %</label><input id="setSsPct" class="num" type="number" step="1"></div>
-        <div class="fld"><label>SS flat fee (under $50)</label><input id="setSsFlat" class="num" type="number" step="0.5"></div>
+    <div class="row" style="gap:18px">
+      <div style="flex:1;min-width:200px">
+        <label>Expected SlabSharks hammer (CAD)</label>
+        <input type="number" id="calcHammer" value="30" step="0.5" />
       </div>
-    </details>
+      <div style="flex:1;min-width:200px">
+        <label>COMC comp / last sale (USD)</label>
+        <input type="number" id="calcComp" value="5" step="0.5" />
+      </div>
+    </div>
+    <div class="calc-out" id="calcOut"></div>
+    <p class="mini" style="margin-top:14px">SlabSharks net = hammer &minus; 20% &minus; ($3 flat if under $50) &minus; $3 export. COMC net = (comp &minus; fee) &times; FX. Fee = $0.99 + 4% over $25.</p>
   </div>
 
-  <div class="sub" style="margin:18px 0 40px">Live auction tracking: paste a card's COMC/eBay listing URL in its notes or ask Claude to pull current bids by listing URL/auction ID — the browser fetch updates this file. Data lives in <code>dashboard/data.json</code>.</div>
+  <div class="card">
+    <h2><span class="status-dot"></span>Live at auction</h2>
+    <div class="tablewrap">
+      <table id="auctionTable">
+        <thead><tr>
+          <th data-sort="name">card</th><th data-sort="player">player</th><th data-sort="venue">venue</th>
+          <th data-sort="current_bid" class="num">bid (US$)</th><th data-sort="bid_count" class="num">bids</th>
+          <th class="num">net if ends here</th><th data-sort="bid_updated">updated</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cards</h2>
+    <div class="filters">
+      <input type="search" id="cardSearch" placeholder="search name / player&hellip;" />
+      <select id="statusFilter"><option value="">all statuses</option></select>
+      <span class="mini" id="cardCount"></span>
+    </div>
+    <div class="tablewrap">
+      <table id="cardsTable">
+        <thead><tr>
+          <th data-sort="name">card</th><th data-sort="player">player</th><th data-sort="status">status</th>
+          <th data-sort="comc_comp_usd" class="num">COMC $</th><th data-sort="expected_hammer_cad" class="num">exp. hammer</th>
+          <th class="num">verdict</th><th data-sort="sold_price_cad" class="num">realized</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Shipments</h2>
+    <div class="tablewrap">
+      <table id="shipTable">
+        <thead><tr>
+          <th data-sort="date">date</th><th data-sort="cards" class="num">cards</th><th data-sort="service">service</th>
+          <th data-sort="cost" class="num">cost</th><th class="num">$/card</th><th data-sort="status">status</th><th>notes</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 </div>
+<div class="toast" id="toast"></div>
 
-<script>
-const $ = s => document.querySelector(s);
-let DB = { settings:{}, shipments:[], cards:[] };
-let sortK = 'status', sortDir = 1, saveT = null;
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const SUPABASE_URL = 'https://jumfzlqrcffrsazgpsol.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_wwHLrxcp5TqGsSobJ-Glpg_0Gw1mYRs'
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-const money = (v, cur='') => v==null||v===''||isNaN(v) ? '—' : (v<0?'-$':'$')+Math.abs(+v).toFixed(2)+cur;
-const uid = () => 'x'+Math.random().toString(36).slice(2,9);
+const $ = s => document.querySelector(s)
+const money = (n,c='') => n==null||isNaN(n) ? '—' : c+Number(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})
+const setSave = (t,cls='') => { const e=$('#savestate'); e.textContent=t; e.className='savestate '+cls }
+let toastT
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1800) }
 
-function comcNet(compUSD){ if(compUSD==null||compUSD==='') return null; const s=DB.settings, c=+compUSD;
-  const fee = c < s.comcFeeThresh ? s.comcFeeFlat : s.comcFeePctOver*c; return (c-fee)*s.fx; }
-function ssNet(hammerCAD){ if(hammerCAD==null||hammerCAD==='') return null; const s=DB.settings, y=+hammerCAD;
-  return y*(1-s.ssPct) - (y < s.ssFlatUnder ? s.ssFlat : 0) - s.exportCost; }
-function targetHammer(compUSD){ const cn=comcNet(compUSD); if(cn==null) return null; const s=DB.settings;
-  let y=(cn + s.ssFlat + s.exportCost)/(1-s.ssPct); if(y >= s.ssFlatUnder) y=(cn + s.exportCost)/(1-s.ssPct); return y; }
+let S = {}, CARDS = [], SHIPS = []
+let sortKey='name', sortDir=1
 
-async function load(){ const r=await fetch('/api/data'); DB=await r.json();
-  DB.settings=Object.assign({exportCost:3,fx:1.18,ssPct:.20,ssFlat:3,ssFlatUnder:50,comcFeeFlat:.99,comcFeePctOver:.04,comcFeeThresh:25},DB.settings);
-  renderAll(); }
-function save(){ clearTimeout(saveT); saveT=setTimeout(async()=>{
-  await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(DB,null,2)});
-  const s=$('#saved'); s.classList.add('on'); setTimeout(()=>s.classList.remove('on'),900);
-},250); }
+function feeCOMC(comp){ if(comp==null) return null; const f = S.comc_fee_flat + (comp>S.comc_fee_thresh ? (comp-S.comc_fee_thresh)*S.comc_fee_pct_over : 0); return (comp-f)*S.fx }
+function netSS(hammer){ if(hammer==null) return null; let n = hammer*(1-S.ss_pct); if(hammer<S.ss_flat_under) n-=S.ss_flat; n-=S.export_cost; return n }
+function targetHammer(comcNet){ // hammer where SS net == comcNet (assume under-50 tier)
+  if(comcNet==null) return null; return (comcNet + S.export_cost + (S.ss_flat_under? S.ss_flat:0)) / (1-S.ss_pct) }
 
-function netByVenue(price, venue){ if(price==null||price==='') return null; return venue==='SlabSharks' ? ssNet(price) : comcNet(price); }
-
-function renderLive(){
-  const live=DB.cards.filter(c=>c.status==='listed');
-  if(!live.length){ $('#liveBody').innerHTML='<div class="mut" style="padding:8px 0">nothing at auction right now. mark a card “listed” + add its current bid, or send me the listing links and I’ll load them.</div>'; return; }
-  live.sort((a,b)=>(b.currentBid||0)-(a.currentBid||0));
-  $('#liveBody').innerHTML='<div class="twrap"><table><thead><tr><th>Card</th><th>Player</th><th>Venue</th><th>Current bid</th><th>Bids</th><th>Net if it ends here</th><th>Updated</th><th></th></tr></thead><tbody>'+
-    live.map(c=>{ const net=netByVenue(c.currentBid,c.venue); const cur=c.venue==='SlabSharks'?'C$':'US$';
-      return `<tr data-id="${c.id}"><td class="name">${c.name||''}</td><td>${c.player||''}</td><td class="mut">${c.venue||''}</td>`+
-        `<td><input data-lf="currentBid" class="num" type="number" step="0.01" value="${c.currentBid??''}" style="width:90px"> <span class="mut" style="font-size:11px">${cur}</span></td>`+
-        `<td><input data-lf="bidCount" class="num" type="number" value="${c.bidCount??''}" style="width:50px"></td>`+
-        `<td class="${net>=0?'pos':'neg'}">${money(net)} <span class="mut" style="font-size:11px">C$</span></td>`+
-        `<td class="mut">${c.bidUpdated||'—'}</td>`+
-        `<td>${c.listingUrl?`<a href="${c.listingUrl}" target="_blank" rel="noopener">view ↗</a>`:'—'}</td></tr>`;
-    }).join('')+'</tbody></table></div>';
+async function load(){
+  setSave('syncing…','syncing')
+  const [s,c,sh] = await Promise.all([
+    sb.from('card_settings').select('*').eq('id',1).single(),
+    sb.from('card_cards').select('*').order('created_at',{ascending:true}),
+    sb.from('card_shipments').select('*')
+  ])
+  if(s.error||c.error||sh.error){ setSave('connection error','warn'); console.error(s.error||c.error||sh.error); return }
+  S=s.data; CARDS=c.data; SHIPS=sh.data
+  render(); setSave('synced ✓','ok'); setTimeout(()=>setSave('synced'),1500)
 }
 
-function calcRow(c){
-  const cn=comcNet(c.comcCompUSD);
-  const hammer = c.status==='sold' && c.soldPriceCAD!=null ? c.soldPriceCAD : c.expectedHammerCAD;
-  const sn=ssNet(hammer);
-  const edge = (sn!=null && cn!=null) ? sn-cn : null;
-  const verdict = (sn!=null && cn!=null) ? (sn>cn?'SEND':'SKIP') : null;
-  return {cn, sn, edge, verdict, hammer};
-}
+function render(){ renderTiles(); renderCalc(); renderAuction(); renderCards(); renderShips(); renderStatusFilter() }
 
 function renderTiles(){
-  const cards=DB.cards;
-  const inflight=cards.filter(c=>['queued','shipped'].includes(c.status)).length;
-  const listed=cards.filter(c=>c.status==='listed');
-  const liveNet=listed.reduce((a,c)=>a+(netByVenue(c.currentBid,c.venue)||0),0);
-  const sold=cards.filter(c=>c.status==='sold');
-  let realized=0, comcAlt=0;
-  sold.forEach(c=>{ const m=calcRow(c); if(m.sn!=null)realized+=m.sn; if(m.cn!=null)comcAlt+=m.cn; });
-  const edge=realized-comcAlt;
-  const t=[
-    ['In flight',inflight],
-    ['At auction',listed.length],
-    ['Live value (net)',money(liveNet)],
-    ['Sold',sold.length],
-    ['Realized SS net',money(realized)],
-    ['SlabSharks edge',(edge>=0?'+':'')+money(edge)]
-  ];
-  $('#tiles').innerHTML=t.map((x,i)=>`<div class="tile"><div class="k">${x[0]}</div><div class="v ${x[0]==='SlabSharks edge'?(edge>=0?'pos':'neg'):''}">${x[1]}</div></div>`).join('');
+  const atAuction = CARDS.filter(c=>c.status==='listed')
+  const inFlight = SHIPS.filter(s=>s.status==='processing').reduce((a,s)=>a+(s.cards||0),0)
+  const sold = CARDS.filter(c=>c.status==='sold')
+  const liveNet = atAuction.reduce((a,c)=>a+(netSS(c.current_bid)||0),0)
+  const realized = sold.reduce((a,c)=>a+(c.sold_price_cad||0),0)
+  const comcWould = sold.reduce((a,c)=>a+(feeCOMC(c.comc_comp_usd)||0),0)
+  const tiles=[
+    ['at auction', atAuction.length],
+    ['live value (net)', money(liveNet,'$'), 'good'],
+    ['in flight', inFlight],
+    ['sold', sold.length],
+    ['realized SS net', money(realized,'$'), 'good'],
+    ['COMC would’ve paid', money(comcWould,'$')]
+  ]
+  $('#tiles').innerHTML = tiles.map(([k,v,cls])=>`<div class="tile"><div class="k">${k}</div><div class="v ${cls||''}">${v}</div></div>`).join('')
 }
 
 function renderCalc(){
-  const h=+$('#calcHammer').value, comp=+$('#calcComp').value;
-  const cn=comcNet(comp), sn=ssNet(h), tgt=targetHammer(comp);
-  const send = sn>cn;
-  $('#calcOut').innerHTML =
-    `<div class="row" style="justify-content:space-between"><span class="mut">verdict</span>`+
-    `<span class="pill ${send?'send':'skip'}">${send?'SEND':'SKIP'}</span></div>`+
-    `<div class="big ${send?'pos':'neg'}" style="margin:6px 0 2px">${money(sn)} <span class="mut" style="font-size:13px">SS net</span></div>`+
-    `<div class="mut" style="font-size:12px">COMC net ${money(cn)} · beat COMC at a ${money(tgt)} hammer</div>`;
+  const h=parseFloat($('#calcHammer').value), comp=parseFloat($('#calcComp').value)
+  const ss=netSS(h), cm=feeCOMC(isNaN(comp)?null:comp), tgt=targetHammer(cm)
+  const send = ss!=null && cm!=null && ss>=cm
+  $('#calcOut').innerHTML = `
+    <div><div class="k">SlabSharks net</div><div class="v">${money(ss,'$')}</div></div>
+    <div><div class="k">COMC net</div><div class="v">${money(cm,'$')}</div></div>
+    <div><div class="k">verdict</div><div class="v ${send?'g':'r'}">${send?'SEND':'KEEP'}</div></div>
+    <div><div class="k">hammer to beat COMC</div><div class="v">${money(tgt,'$')}</div></div>`
 }
 
-function playerOpts(){
-  const ps=[...new Set(DB.cards.map(c=>c.player).filter(Boolean))].sort();
-  $('#fPlayer').innerHTML='<option value="">all players</option>'+ps.map(p=>`<option>${p}</option>`).join('');
+function renderAuction(){
+  const rows = CARDS.filter(c=>c.status==='listed').map(c=>{
+    const net=netSS(c.current_bid)
+    return `<tr>
+      <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td><td class="m">${esc(c.venue)||''}</td>
+      <td class="num">${money(c.current_bid,'$')}</td><td class="num">${c.bid_count??'—'}</td>
+      <td class="num ${net>0?'g':'m'}">${money(net,'$')} <span class="mini">C$</span></td>
+      <td class="mini">${esc(c.bid_updated)||'—'}</td>
+      <td>${c.listing_url?`<a class="link" href="${esc(c.listing_url)}" target="_blank" rel="noopener">view <i class="ti ti-external-link"></i></a>`:''}</td>
+    </tr>`
+  }).join('')
+  $('#auctionTable tbody').innerHTML = rows || `<tr><td colspan="8" class="m">no cards at auction</td></tr>`
 }
 
+function sortCards(list){
+  return [...list].sort((a,a2)=>{
+    let x=a[sortKey], y=a2[sortKey]
+    if(x==null)return 1; if(y==null)return -1
+    if(typeof x==='number') return (x-y)*sortDir
+    return String(x).localeCompare(String(y))*sortDir
+  })
+}
 function renderCards(){
-  const q=$('#search').value.toLowerCase(), fs=$('#fStatus').value, fp=$('#fPlayer').value;
-  let rows=DB.cards.map(c=>({c, m:calcRow(c)}));
-  rows=rows.filter(({c})=>(!q||((c.name||'')+' '+(c.player||'')).toLowerCase().includes(q))&&(!fs||c.status===fs)&&(!fp||c.player===fp));
-  rows.sort((a,b)=>{
-    let av,bv;
-    if(sortK==='verdict'){av=a.m.verdict||'';bv=b.m.verdict||'';}
-    else if(sortK==='ssNet'){av=a.m.sn??-1e9;bv=b.m.sn??-1e9;}
-    else if(sortK==='edge'){av=a.m.edge??-1e9;bv=b.m.edge??-1e9;}
-    else{av=a.c[sortK]??'';bv=b.c[sortK]??'';}
-    if(typeof av==='number'||typeof bv==='number'){av=+av||0;bv=+bv||0;return (av-bv)*sortDir;}
-    return (''+av).localeCompare(''+bv)*sortDir;
-  });
-  const statuses=['queued','shipped','listed','sold','unsold'];
-  $('#cardsBody').innerHTML=rows.map(({c,m})=>{
-    const vpill=m.verdict?`<span class="pill ${m.verdict==='SEND'?'send':'skip'}">${m.verdict}</span> <span class="mut" style="font-size:11px">≥${money(targetHammer(c.comcCompUSD))}</span>`:'—';
-    const edgeCls=m.edge==null?'mut':(m.edge>=0?'pos':'neg');
-    return `<tr data-id="${c.id}">
-      <td class="name">${c.name||''}${c.notes?`<div class="tag">${c.notes}</div>`:''}</td>
-      <td><input data-f="player" value="${c.player||''}" style="width:92px"></td>
-      <td><input data-f="comcCompUSD" class="num" type="number" step="0.25" value="${c.comcCompUSD??''}"></td>
-      <td><input data-f="expectedHammerCAD" class="num" type="number" step="1" value="${c.expectedHammerCAD??''}"></td>
-      <td>${vpill}</td>
-      <td><select data-f="status" class="status">${statuses.map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}</select></td>
-      <td><input data-f="soldPriceCAD" class="num" type="number" step="1" value="${c.soldPriceCAD??''}"></td>
-      <td>${money(m.sn)}</td>
-      <td class="${edgeCls}">${m.edge==null?'—':(m.edge>=0?'+':'')+money(m.edge)}</td>
-      <td><button class="x" data-del="${c.id}">✕</button></td>
-    </tr>`;
-  }).join('') || `<tr><td colspan="10" class="mut" style="padding:16px">no cards yet — hit “+ add card”.</td></tr>`;
+  const q=$('#cardSearch').value.toLowerCase(), sf=$('#statusFilter').value
+  let list=CARDS.filter(c=>(!sf||c.status===sf) && (!q || (c.name+' '+(c.player||'')).toLowerCase().includes(q)))
+  list=sortCards(list)
+  $('#cardCount').textContent = `${list.length} of ${CARDS.length}`
+  $('#cardsTable tbody').innerHTML = list.map(c=>{
+    const cm=feeCOMC(c.comc_comp_usd), ss=netSS(c.expected_hammer_cad)
+    let verdict='—'
+    if(cm!=null&&ss!=null) verdict = ss>=cm?`<span class="verdict-send">send</span>`:`<span class="verdict-keep">keep</span>`
+    const pl = c.sold_price_cad!=null && cm!=null ? c.sold_price_cad-cm : null
+    return `<tr>
+      <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td>
+      <td><span class="pill ${c.status}">${c.status}</span></td>
+      <td class="num">${money(c.comc_comp_usd,'$')}</td><td class="num">${money(c.expected_hammer_cad,'$')}</td>
+      <td class="num">${verdict}</td>
+      <td class="num">${c.sold_price_cad!=null?money(c.sold_price_cad,'$'):'—'}${pl!=null?` <span class="mini ${pl>=0?'g':'r'}">${pl>=0?'+':''}${pl.toFixed(0)}</span>`:''}</td>
+      <td><button class="ghost" data-edit="${c.id}" style="padding:4px 8px"><i class="ti ti-edit"></i></button></td>
+    </tr>`
+  }).join('') || `<tr><td colspan="8" class="m">no cards</td></tr>`
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editCard(b.dataset.edit))
 }
 
-function renderShip(){
-  $('#shipBody').innerHTML=DB.shipments.map(s=>{
-    const per = s.cost&&s.cards?('$'+(s.cost/s.cards).toFixed(2)):'—';
-    return `<tr data-sid="${s.id}">
-      <td><input data-sf="date" value="${s.date||''}" style="width:104px"></td>
-      <td><input data-sf="cards" class="num" type="number" value="${s.cards??''}" style="width:60px"></td>
-      <td><input data-sf="service" value="${s.service||''}" style="width:130px"></td>
-      <td><input data-sf="declaredValue" class="num" type="number" value="${s.declaredValue??''}" style="width:70px"></td>
-      <td><input data-sf="cost" class="num" type="number" step="0.01" value="${s.cost??''}"></td>
-      <td class="mut">${per}</td>
-      <td><input data-sf="tracking" value="${s.tracking||''}" style="width:150px"></td>
-      <td><select data-sf="status" class="status">${['processing','shipped','in transit','delivered'].map(x=>`<option ${x===s.status?'selected':''}>${x}</option>`).join('')}</select></td>
-      <td><button class="x" data-delship="${s.id}">✕</button></td>
-    </tr>`;
-  }).join('') || `<tr><td colspan="9" class="mut" style="padding:16px">no shipments yet.</td></tr>`;
+function renderShips(){
+  $('#shipTable tbody').innerHTML = SHIPS.map(s=>`<tr>
+    <td>${esc(s.date)||'—'}</td><td class="num">${s.cards??'—'}</td><td class="m">${esc(s.service)||''}</td>
+    <td class="num">${money(s.cost,'$')}</td><td class="num">${s.cost&&s.cards?money(s.cost/s.cards,'$'):'—'}</td>
+    <td><span class="pill ${s.status==='delivered'?'sold':'queued'}">${esc(s.status)||''}</span></td>
+    <td class="mini">${esc(s.notes)||''}</td></tr>`).join('')
 }
 
-function renderSettings(){
-  $('#setExport').value=DB.settings.exportCost; $('#setFx').value=DB.settings.fx;
-  $('#setSsPct').value=Math.round(DB.settings.ssPct*100); $('#setSsFlat').value=DB.settings.ssFlat;
-  $('#expLbl').textContent=DB.settings.exportCost; $('#fxLbl').textContent=DB.settings.fx;
+function renderStatusFilter(){
+  const cur=$('#statusFilter').value
+  const st=[...new Set(CARDS.map(c=>c.status))]
+  $('#statusFilter').innerHTML = `<option value="">all statuses</option>`+st.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join('')
 }
 
-function renderAll(){ renderTiles(); renderCalc(); renderLive(); playerOpts(); renderCards(); renderShip(); renderSettings();
-  $('#stamp').textContent=DB.cards.length+' cards · '+DB.shipments.length+' shipments'; }
+function esc(s){ return s==null?'':String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])) }
 
-// events
-$('#calcHammer').addEventListener('input',renderCalc);
-$('#calcComp').addEventListener('input',renderCalc);
-$('#refreshBids').addEventListener('click',load);
-$('#liveBody').addEventListener('input',e=>{ const tr=e.target.closest('tr'); if(!tr)return; const c=DB.cards.find(x=>x.id===tr.dataset.id); const f=e.target.dataset.lf; if(!c||!f)return; let v=e.target.value; v=v===''?null:+v; c[f]=v; save(); renderTiles(); });
-$('#liveBody').addEventListener('change',e=>{ if(e.target.dataset.lf) renderLive(); });
-$('#search').addEventListener('input',renderCards);
-$('#fStatus').addEventListener('change',renderCards);
-$('#fPlayer').addEventListener('change',renderCards);
-document.querySelectorAll('#cardsTbl th[data-k]').forEach(th=>th.addEventListener('click',()=>{
-  const k=th.dataset.k; if(sortK===k)sortDir*=-1; else{sortK=k;sortDir=1;} renderCards();
-}));
-$('#addCard').addEventListener('click',()=>{ DB.cards.unshift({id:uid(),name:'New card',player:'',comcCompUSD:null,expectedHammerCAD:null,status:'queued',soldPriceCAD:null,notes:''}); save(); renderTiles(); playerOpts(); renderCards(); });
-$('#addShip').addEventListener('click',()=>{ DB.shipments.unshift({id:uid(),date:new Date().toISOString().slice(0,10),cards:null,service:'Rush',declaredValue:35,cost:null,tracking:'',status:'processing',notes:''}); save(); renderShip(); });
+async function editCard(id){
+  const c=CARDS.find(x=>x.id===id); if(!c)return
+  const name=prompt('Card name',c.name); if(name===null)return
+  const player=prompt('Player',c.player||'')
+  const status=prompt('Status (scheduled/listed/sold/queued)',c.status)
+  const comp=prompt('COMC comp USD (blank = none)',c.comc_comp_usd??'')
+  const hammer=prompt('Expected hammer CAD (blank = none)',c.expected_hammer_cad??'')
+  const sold=prompt('Sold price CAD (blank = none)',c.sold_price_cad??'')
+  const patch={name,player,status,comc_comp_usd:comp===''?null:parseFloat(comp),expected_hammer_cad:hammer===''?null:parseFloat(hammer),sold_price_cad:sold===''?null:parseFloat(sold),updated_at:new Date().toISOString()}
+  setSave('saving…','syncing')
+  const {error}=await sb.from('card_cards').update(patch).eq('id',id)
+  if(error){ setSave('save failed','warn'); toast('save failed'); return }
+  Object.assign(c,patch); render(); setSave('saved ✓','ok'); toast('saved')
+}
 
-$('#cardsBody').addEventListener('input',e=>{
-  const tr=e.target.closest('tr'); if(!tr)return; const c=DB.cards.find(x=>x.id===tr.dataset.id); const f=e.target.dataset.f; if(!c||!f)return;
-  let v=e.target.value; if(['comcCompUSD','expectedHammerCAD','soldPriceCAD'].includes(f)) v=v===''?null:+v; c[f]=v; save(); renderTiles(); renderCards()==null;
-});
-$('#cardsBody').addEventListener('change',e=>{ if(e.target.dataset.f==='status'){ const tr=e.target.closest('tr'); const c=DB.cards.find(x=>x.id===tr.dataset.id); c.status=e.target.value; save(); renderTiles(); renderCards(); }});
-$('#cardsBody').addEventListener('click',e=>{ const id=e.target.dataset.del; if(id){ DB.cards=DB.cards.filter(c=>c.id!==id); save(); renderTiles(); playerOpts(); renderCards(); }});
+async function addCard(){
+  const name=prompt('New card name'); if(!name)return
+  const id='n'+Date.now().toString(36)
+  const row={id,name,status:'scheduled',venue:'SlabSharks'}
+  setSave('saving…','syncing')
+  const {error}=await sb.from('card_cards').insert(row)
+  if(error){ setSave('add failed','warn'); toast('add failed'); return }
+  CARDS.push(row); render(); setSave('saved ✓','ok'); toast('card added')
+}
 
-$('#shipBody').addEventListener('input',e=>{
-  const tr=e.target.closest('tr'); if(!tr)return; const s=DB.shipments.find(x=>x.id===tr.dataset.sid); const f=e.target.dataset.sf; if(!s||!f)return;
-  let v=e.target.value; if(['cards','declaredValue','cost'].includes(f)) v=v===''?null:+v; s[f]=v; save(); renderShip();
-});
-$('#shipBody').addEventListener('change',e=>{ if(e.target.dataset.sf==='status'){ const s=DB.shipments.find(x=>x.id===e.target.closest('tr').dataset.sid); s.status=e.target.value; save(); }});
-$('#shipBody').addEventListener('click',e=>{ const id=e.target.dataset.delship; if(id){ DB.shipments=DB.shipments.filter(s=>s.id!==id); save(); renderShip(); }});
-
-['setExport','setFx','setSsPct','setSsFlat'].forEach(id=>$('#'+id).addEventListener('input',()=>{
-  DB.settings.exportCost=+$('#setExport').value; DB.settings.fx=+$('#setFx').value;
-  DB.settings.ssPct=(+$('#setSsPct').value)/100; DB.settings.ssFlat=+$('#setSsFlat').value;
-  save(); renderTiles(); renderCalc(); renderCards(); $('#expLbl').textContent=DB.settings.exportCost; $('#fxLbl').textContent=DB.settings.fx;
-}));
-
-load();
+$('#calcHammer').oninput=renderCalc; $('#calcComp').oninput=renderCalc
+$('#cardSearch').oninput=renderCards; $('#statusFilter').onchange=renderCards
+$('#refreshBtn').onclick=load; $('#addCardBtn').onclick=addCard
+document.querySelectorAll('th[data-sort]').forEach(th=>th.onclick=()=>{
+  const k=th.dataset.sort; sortDir = sortKey===k?-sortDir:1; sortKey=k; renderCards()
+})
+load()
 </script>
 </body>
 </html>
