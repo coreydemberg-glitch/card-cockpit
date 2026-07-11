@@ -163,7 +163,8 @@ const setSave=(t,c='')=>{const e=$('#savestate');e.textContent=t;e.className='sa
 let S={},CARDS=[],EVENTS=[]
 const state={tab:'listed',q:'',venue:'',sort:'bids',bidsOnly:false,view:'grid'}
 
-function feeCOMC(b){if(b==null)return null;const f=S.comc_fee_flat+(b>S.comc_fee_thresh?(b-S.comc_fee_thresh)*S.comc_fee_pct_over:0);return (b-f)*S.fx}
+// COMC net (confirmed from receipts, fee_logic.md): fee = $0.99 flat under $25, else 4% of full; then × 1.18 landed FX
+function feeCOMC(b){if(b==null)return null;const f=(b<S.comc_fee_thresh)?S.comc_fee_flat:(b*S.comc_fee_pct_over);return (b-f)*S.fx}
 function netSS(h){if(h==null)return null;let n=h*(1-S.ss_pct);if(h<S.ss_flat_under)n-=S.ss_flat;n-=S.export_cost;return n}
 const isCOMC=c=>/comc|ebay/i.test(c.venue||'')
 const netFor=c=>isCOMC(c)?feeCOMC(c.current_bid):netSS(c.current_bid)
