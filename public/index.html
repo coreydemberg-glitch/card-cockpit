@@ -119,7 +119,9 @@ label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:5px}
 
   <div class="toolbar">
     <div class="search"><i class="ti ti-search"></i><input type="search" id="q" placeholder="search card or player…" /></div>
-    <select id="venue"><option value="">all venues</option><option value="SlabSharks">SlabSharks</option><option value="COMC/eBay">COMC / eBay</option></select>
+    <div class="chip venuechip on" data-venue=""><i class="ti ti-stack-2"></i> all</div>
+    <div class="chip venuechip" data-venue="SlabSharks"><i class="ti ti-gavel"></i> SlabSharks</div>
+    <div class="chip venuechip" data-venue="COMC/eBay"><i class="ti ti-brand-ebay"></i> COMC · eBay</div>
     <select id="sort">
       <option value="bids">most bids</option>
       <option value="bidhi">highest bid</option>
@@ -167,6 +169,7 @@ const state={tab:'listed',q:'',venue:'',sort:'bids',bidsOnly:false,view:'grid'}
 function feeCOMC(b){if(b==null)return null;const f=(b<S.comc_fee_thresh)?S.comc_fee_flat:(b*S.comc_fee_pct_over);return (b-f)*S.fx}
 function netSS(h){if(h==null)return null;let n=h*(1-S.ss_pct);if(h<S.ss_flat_under)n-=S.ss_flat;n-=S.export_cost;return n}
 const isCOMC=c=>/comc|ebay/i.test(c.venue||'')
+const venueMatch=c=>!state.venue||(state.venue==='COMC/eBay'?isCOMC(c):c.venue===state.venue)
 const netFor=c=>isCOMC(c)?feeCOMC(c.current_bid):netSS(c.current_bid)
 const cur=c=>isCOMC(c)?'US$':'C$'
 const started=c=>c.current_bid>0.99
@@ -190,21 +193,22 @@ function tabCount(st){ return CARDS.filter(c=>st==='scheduled'?(c.status==='sche
 function render(){ renderTiles();renderTabs();renderGrid();renderCalc() }
 
 function renderTiles(){
-  const live=CARDS.filter(c=>c.status==='listed')
+  const live=CARDS.filter(c=>c.status==='listed'&&venueMatch(c))
   const bidding=live.filter(c=>c.bid_count>0)
   const liveGross=live.reduce((a,c)=>a+(c.current_bid||0),0)
   const liveNet=live.filter(started).reduce((a,c)=>a+(netFor(c)||0),0)
-  const tiles=[['at auction',live.length],['getting bids',bidding.length],['live bids (gross)',money(liveGross)],['live value (net)',money(liveNet),'good']]
+  const scope=state.venue?(state.venue==='COMC/eBay'?'COMC · eBay':state.venue)+' · ':''
+  const tiles=[[scope+'at auction',live.length],['getting bids',bidding.length],['live bids (gross)',money(liveGross)],['live value (net)',money(liveNet),'good']]
   $('#tiles').innerHTML=tiles.map(([k,v,cl])=>`<div class="tile"><div class="k">${k}</div><div class="v ${cl||''}">${v}</div></div>`).join('')
   const nb=bidding.length; const b=$('#bellBadge'); if(nb){b.style.display='flex';b.textContent=nb}else b.style.display='none'
 }
 function renderTabs(){
-  $('#tabs').innerHTML=TABS.map(([st,lbl])=>`<div class="tab ${state.tab===st?'on':''}" data-tab="${st}">${lbl}<span class="n">${tabCount(st)}</span></div>`).join('')
+  $('#tabs').innerHTML=TABS.filter(([st])=>st==='listed'||tabCount(st)>0).map(([st,lbl])=>`<div class="tab ${state.tab===st?'on':''}" data-tab="${st}">${lbl}<span class="n">${tabCount(st)}</span></div>`).join('')
   document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.tab=t.dataset.tab;render()})
 }
 function filtered(){
   let list=CARDS.filter(c=>state.tab==='scheduled'?(c.status==='scheduled'||c.status==='queued'):c.status===state.tab)
-  if(state.venue)list=list.filter(c=>state.venue==='COMC/eBay'?isCOMC(c):c.venue===state.venue)
+  list=list.filter(venueMatch)
   if(state.bidsOnly)list=list.filter(c=>c.bid_count>0)
   if(state.q){const q=state.q.toLowerCase();list=list.filter(c=>(c.name+' '+(c.player||'')).toLowerCase().includes(q))}
   const s=state.sort
@@ -263,7 +267,7 @@ function renderCalc(){
 }
 
 $('#q').oninput=e=>{state.q=e.target.value;renderGrid()}
-$('#venue').onchange=e=>{state.venue=e.target.value;renderGrid()}
+document.querySelectorAll('.venuechip').forEach(ch=>ch.onclick=()=>{state.venue=ch.dataset.venue;document.querySelectorAll('.venuechip').forEach(x=>x.classList.toggle('on',x===ch));render()})
 $('#sort').onchange=e=>{state.sort=e.target.value;renderGrid()}
 $('#bidsOnly').onclick=e=>{state.bidsOnly=!state.bidsOnly;e.currentTarget.classList.toggle('on',state.bidsOnly);renderGrid()}
 $('#gridBtn').onclick=()=>{state.view='grid';$('#gridBtn').classList.add('on');$('#listBtn').classList.remove('on');renderGrid()}
