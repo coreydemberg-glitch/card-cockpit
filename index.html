@@ -181,15 +181,19 @@ function render(){ renderTiles(); renderCalc(); renderAuction(); renderCards(); 
 
 function renderTiles(){
   const atAuction = CARDS.filter(c=>c.status==='listed')
+  const bidding = atAuction.filter(c=>c.bid_count>0)
   const inFlight = SHIPS.filter(s=>s.status==='processing').reduce((a,s)=>a+(s.cards||0),0)
   const sold = CARDS.filter(c=>c.status==='sold')
-  const liveNet = atAuction.reduce((a,c)=>a+(netSS(c.current_bid)||0),0)
+  // live value = net if every card that has moved off its opening bid ended right now
+  const liveNet = atAuction.filter(c=>c.current_bid>0.99).reduce((a,c)=>a+(netSS(c.current_bid)||0),0)
+  const liveGross = atAuction.reduce((a,c)=>a+(c.current_bid||0),0)
   const realized = sold.reduce((a,c)=>a+(c.sold_price_cad||0),0)
   const comcWould = sold.reduce((a,c)=>a+(feeCOMC(c.comc_comp_usd)||0),0)
   const tiles=[
     ['at auction', atAuction.length],
+    ['getting bids', bidding.length],
+    ['live bids (gross)', money(liveGross,'$')],
     ['live value (net)', money(liveNet,'$'), 'good'],
-    ['in flight', inFlight],
     ['sold', sold.length],
     ['realized SS net', money(realized,'$'), 'good'],
     ['COMC would’ve paid', money(comcWould,'$')]
@@ -209,12 +213,15 @@ function renderCalc(){
 }
 
 function renderAuction(){
-  const rows = CARDS.filter(c=>c.status==='listed').map(c=>{
-    const net=netSS(c.current_bid)
+  const live = CARDS.filter(c=>c.status==='listed').sort((a,b)=>
+    (b.bid_count||0)-(a.bid_count||0) || (b.current_bid||0)-(a.current_bid||0))
+  const rows = live.map(c=>{
+    const started=c.current_bid>0.99
+    const net=started?netSS(c.current_bid):null
     return `<tr>
       <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td><td class="m">${esc(c.venue)||''}</td>
       <td class="num">${money(c.current_bid,'$')}</td><td class="num">${c.bid_count??'—'}</td>
-      <td class="num ${net>0?'g':'m'}">${money(net,'$')} <span class="mini">C$</span></td>
+      <td class="num ${net>0?'g':'m'}">${net==null?'<span class="m">—</span>':money(net,'$')+' <span class="mini">C$</span>'}</td>
       <td class="mini">${esc(c.bid_updated)||'—'}</td>
       <td>${c.listing_url?`<a class="link" href="${esc(c.listing_url)}" target="_blank" rel="noopener">view <i class="ti ti-external-link"></i></a>`:''}</td>
     </tr>`
