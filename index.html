@@ -103,8 +103,8 @@ tr:hover td{background:var(--surface2)}
       <table id="auctionTable">
         <thead><tr>
           <th data-sort="name">card</th><th data-sort="player">player</th><th data-sort="venue">venue</th>
-          <th data-sort="current_bid" class="num">bid (US$)</th><th data-sort="bid_count" class="num">bids</th>
-          <th class="num">net if ends here</th><th data-sort="bid_updated">updated</th><th></th>
+          <th data-sort="current_bid" class="num">current bid</th><th data-sort="bid_count" class="num">bids</th>
+          <th class="num">net if ends here (CAD)</th><th data-sort="bid_updated">updated</th><th></th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -162,6 +162,11 @@ let sortKey='name', sortDir=1
 
 function feeCOMC(comp){ if(comp==null) return null; const f = S.comc_fee_flat + (comp>S.comc_fee_thresh ? (comp-S.comc_fee_thresh)*S.comc_fee_pct_over : 0); return (comp-f)*S.fx }
 function netSS(hammer){ if(hammer==null) return null; let n = hammer*(1-S.ss_pct); if(hammer<S.ss_flat_under) n-=S.ss_flat; n-=S.export_cost; return n }
+function isCOMC(c){ return /comc|ebay/i.test(c.venue||'') }
+// venue-aware net CAD if this auction ended at its current bid:
+//  SlabSharks = CAD hammer, 20% + $3-under-$50 + $3 export
+//  COMC/eBay  = USD bid, COMC fee ($0.99 + 4% over $25), then × FX to CAD
+function netFor(c){ return isCOMC(c) ? feeCOMC(c.current_bid) : netSS(c.current_bid) }
 function targetHammer(comcNet){ // hammer where SS net == comcNet (assume under-50 tier)
   if(comcNet==null) return null; return (comcNet + S.export_cost + (S.ss_flat_under? S.ss_flat:0)) / (1-S.ss_pct) }
 
@@ -185,7 +190,7 @@ function renderTiles(){
   const inFlight = SHIPS.filter(s=>s.status==='processing').reduce((a,s)=>a+(s.cards||0),0)
   const sold = CARDS.filter(c=>c.status==='sold')
   // live value = net if every card that has moved off its opening bid ended right now
-  const liveNet = atAuction.filter(c=>c.current_bid>0.99).reduce((a,c)=>a+(netSS(c.current_bid)||0),0)
+  const liveNet = atAuction.filter(c=>c.current_bid>0.99).reduce((a,c)=>a+(netFor(c)||0),0)
   const liveGross = atAuction.reduce((a,c)=>a+(c.current_bid||0),0)
   const realized = sold.reduce((a,c)=>a+(c.sold_price_cad||0),0)
   const comcWould = sold.reduce((a,c)=>a+(feeCOMC(c.comc_comp_usd)||0),0)
@@ -217,10 +222,11 @@ function renderAuction(){
     (b.bid_count||0)-(a.bid_count||0) || (b.current_bid||0)-(a.current_bid||0))
   const rows = live.map(c=>{
     const started=c.current_bid>0.99
-    const net=started?netSS(c.current_bid):null
+    const net=started?netFor(c):null
+    const cur=isCOMC(c)?'US$':'C$'
     return `<tr>
       <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td><td class="m">${esc(c.venue)||''}</td>
-      <td class="num">${money(c.current_bid,'$')}</td><td class="num">${c.bid_count??'—'}</td>
+      <td class="num">${money(c.current_bid,'$')} <span class="mini">${cur}</span></td><td class="num">${c.bid_count??'—'}</td>
       <td class="num ${net>0?'g':'m'}">${net==null?'<span class="m">—</span>':money(net,'$')+' <span class="mini">C$</span>'}</td>
       <td class="mini">${esc(c.bid_updated)||'—'}</td>
       <td>${c.listing_url?`<a class="link" href="${esc(c.listing_url)}" target="_blank" rel="noopener">view <i class="ti ti-external-link"></i></a>`:''}</td>
