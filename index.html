@@ -48,6 +48,7 @@ input:focus,select:focus{border-color:var(--accent)}
 .pcard:hover{border-color:var(--line)}
 .thumb{height:118px;background:linear-gradient(135deg,var(--surface2),var(--surface3));display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
 .thumb .ph{color:var(--dim);font-size:30px}
+.pimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0d0f13}
 .thumb .vchip{position:absolute;top:8px;left:8px;font-size:10.5px;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.5);color:var(--muted);border:1px solid var(--line)}
 .thumb .vchip.ss{color:#8fd6ff;border-color:#2c4b63}
 .thumb .vchip.comc{color:#ffcf8f;border-color:#63512c}
@@ -200,8 +201,10 @@ function renderTiles(){
   const scope=state.venue?(state.venue==='COMC/eBay'?'COMC · eBay':state.venue)+' · ':''
   const tiles=[[scope+'at auction',live.length],['getting bids',bidding.length],['live bids (gross)',money(liveGross)],['live value (net)',money(liveNet),'good']]
   $('#tiles').innerHTML=tiles.map(([k,v,cl])=>`<div class="tile"><div class="k">${k}</div><div class="v ${cl||''}">${v}</div></div>`).join('')
-  const nb=bidding.length; const b=$('#bellBadge'); if(nb){b.style.display='flex';b.textContent=nb}else b.style.display='none'
+  renderBadge()
 }
+function unreadCount(){ const ls=+(localStorage.getItem('cc_lastSeen')||0); return EVENTS.filter(e=>new Date(e.at).getTime()>ls).length }
+function renderBadge(){ const n=unreadCount(); const b=$('#bellBadge'); if(n){b.style.display='flex';b.textContent=n}else b.style.display='none' }
 function renderTabs(){
   $('#tabs').innerHTML=TABS.filter(([st])=>st==='listed'||tabCount(st)>0).map(([st,lbl])=>`<div class="tab ${state.tab===st?'on':''}" data-tab="${st}">${lbl}<span class="n">${tabCount(st)}</span></div>`).join('')
   document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.tab=t.dataset.tab;render()})
@@ -225,7 +228,7 @@ function card(c){
   const net=started(c)?netFor(c):null
   const vcl=isCOMC(c)?'comc':'ss'; const ends=endsText(c)
   return `<div class="pcard">
-    <div class="thumb"><i class="ti ti-cards ph"></i>
+    <div class="thumb">${c.image_url?`<img class="pimg" src="${esc(c.image_url)}" alt="" loading="lazy" onerror="this.remove()">`:''}<i class="ti ti-cards ph"></i>
       <span class="vchip ${vcl}">${esc(c.venue||'')}</span>
       ${c.status==='listed'?`<span class="st"><span class="dot"></span>active</span>`:`<span class="st">${esc(c.status)}</span>`}
     </div>
@@ -274,7 +277,7 @@ $('#gridBtn').onclick=()=>{state.view='grid';$('#gridBtn').classList.add('on');$
 $('#listBtn').onclick=()=>{state.view='list';$('#listBtn').classList.add('on');$('#gridBtn').classList.remove('on');renderGrid()}
 $('#calcHammer').oninput=renderCalc;$('#calcComp').oninput=renderCalc
 $('#refreshBtn').onclick=load
-const openDrawer=o=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o)}
+const openDrawer=o=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);if(o){localStorage.setItem('cc_lastSeen',Date.now());renderBadge()}}
 $('#bellBtn').onclick=()=>openDrawer(true);$('#closeBell').onclick=()=>openDrawer(false);$('#scrim').onclick=()=>openDrawer(false)
 load()
 </script>
