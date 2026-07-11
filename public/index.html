@@ -7,311 +7,270 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css" />
 <style>
 :root{
-  --bg:#0e0f11; --surface:#16181c; --surface2:#1c1f24; --line:#2a2e35;
-  --text:#e8eaed; --muted:#9aa0a8; --dim:#6b7178;
-  --accent:#22ff88; --accent-ink:#04130a;
-  --good:#22ff88; --warn:#f5b34a; --bad:#ff6b6b; --radius:10px;
+  --bg:#0d0f13; --surface:#151821; --surface2:#1b1f2a; --surface3:#222735; --line:#2b3040;
+  --text:#e9ecf1; --muted:#98a0b0; --dim:#69707f;
+  --accent:#22ff88; --accent-ink:#04130a; --accent-dim:#1a2a20;
+  --good:#22ff88; --warn:#f5b34a; --bad:#ff6b6b; --r:10px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1180px;margin:0 auto;padding:28px 22px 80px}
-h1{font-size:22px;font-weight:600;margin:0}
-.sub{color:var(--muted);font-size:13px;margin:4px 0 0}
-a{color:inherit}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.spread{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
-.tile .k{color:var(--muted);font-size:12px;letter-spacing:.03em;text-transform:lowercase}
-.tile .v{font-size:26px;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:22px 20px 80px}
+a{color:inherit;text-decoration:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:6px}
+h1{font-size:21px;font-weight:600;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12.5px;margin:2px 0 0}
+.iconbtn{position:relative;background:var(--surface2);border:1px solid var(--line);color:var(--text);width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px}
+.iconbtn:hover{border-color:var(--accent)}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:600;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.tile .k{color:var(--muted);font-size:11.5px;text-transform:lowercase;letter-spacing:.02em}
+.tile .v{font-size:22px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
 .tile .v.good{color:var(--good)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
-.card h2{font-size:15px;font-weight:600;margin:0 0 14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
-label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
-input,select{background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;width:100%}
-input:focus,select:focus{outline:none;border-color:var(--accent)}
-button{background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-button:hover{border-color:var(--accent);color:var(--text)}
-button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
-button.ghost{background:transparent}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{text-align:left;color:var(--muted);font-weight:500;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
-td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
-tr:hover td{background:var(--surface2)}
-.num{text-align:right;font-variant-numeric:tabular-nums}
-.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-.pill.listed{color:var(--accent);border-color:var(--accent)}
-.pill.sold{color:var(--dim)}
-.pill.scheduled{color:var(--text)}
-.pill.queued{color:var(--warn);border-color:var(--warn)}
-.verdict-send{color:var(--good);font-weight:600}
-.verdict-keep{color:var(--warn);font-weight:600}
-.g{color:var(--good)} .r{color:var(--bad)} .m{color:var(--muted)}
-.mini{font-size:11px;color:var(--dim)}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
-.tablewrap table th:first-child,.tablewrap table td:first-child{padding-left:16px}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.filters input,.filters select{width:auto;min-width:140px}
-.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px;vertical-align:1px}
-.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:16px}
-.calc-out .k{color:var(--muted);font-size:12px}
-.calc-out .v{font-size:20px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
-.toast.show{opacity:1}
-.editrow input,.editrow select{font-size:12.5px;padding:5px 7px}
-.link{color:var(--accent);text-decoration:none;font-size:12px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:18px 0 14px}
+.tab{padding:9px 16px;font-size:13.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500}
+.tab.on{color:var(--text);border-bottom-color:var(--accent)}
+.tab .n{color:var(--dim);font-size:12px;margin-left:5px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.search{flex:1;min-width:200px;position:relative}
+.search i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:16px}
+input,select{background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 11px;font:inherit;font-size:13.5px;outline:none}
+.search input{width:100%;padding-left:34px}
+input:focus,select:focus{border-color:var(--accent)}
+.chip{background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:7px 13px;font-size:12.5px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.chip.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.seg{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--muted);padding:8px 10px;cursor:pointer;font-size:16px;display:flex;align-items:center}
+.seg button.on{background:var(--surface3);color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.grid.list{grid-template-columns:1fr}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pcard:hover{border-color:var(--line)}
+.thumb{height:118px;background:linear-gradient(135deg,var(--surface2),var(--surface3));display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
+.thumb .ph{color:var(--dim);font-size:30px}
+.thumb .vchip{position:absolute;top:8px;left:8px;font-size:10.5px;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.5);color:var(--muted);border:1px solid var(--line)}
+.thumb .vchip.ss{color:#8fd6ff;border-color:#2c4b63}
+.thumb .vchip.comc{color:#ffcf8f;border-color:#63512c}
+.thumb .st{position:absolute;top:8px;right:8px;font-size:10.5px;display:flex;align-items:center;gap:4px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--good)}
+.pbody{padding:11px 12px;display:flex;flex-direction:column;gap:7px;flex:1}
+.ptitle{font-size:12.5px;font-weight:500;line-height:1.35;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pplayer{font-size:11.5px;color:var(--muted)}
+.prow{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
+.prow b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.pnet{font-size:12px;color:var(--good);font-variant-numeric:tabular-nums}
+.pnet.m{color:var(--dim)}
+.pfoot{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:1px solid var(--line);background:var(--surface2)}
+.plink{color:var(--accent);font-size:11.5px;display:inline-flex;align-items:center;gap:4px}
+.mini{font-size:10.5px;color:var(--dim)}
+/* list mode row */
+.grid.list .pcard{flex-direction:row;align-items:stretch}
+.grid.list .thumb{width:90px;height:auto;border-bottom:0;border-right:1px solid var(--line);flex:0 0 90px}
+.grid.list .pbody{flex-direction:row;align-items:center;gap:16px;flex-wrap:wrap}
+.grid.list .ptitle{min-height:0;flex:2;min-width:180px;-webkit-line-clamp:1}
+.grid.list .prow{border-top:0;padding-top:0;gap:18px;flex:1;justify-content:flex-end}
+.grid.list .pfoot{border-top:0;background:transparent;flex:0 0 auto}
+.empty{color:var(--dim);text-align:center;padding:40px}
+/* activity drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:90vw;background:var(--surface);border-left:1px solid var(--line);transform:translateX(100%);transition:.22s;z-index:41;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer h3{font-size:15px;font-weight:600;margin:0;padding:18px 18px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.drawer .body{overflow-y:auto;padding:8px 0}
+.act{display:flex;gap:11px;padding:11px 18px;border-bottom:1px solid var(--line)}
+.act .ai{width:34px;height:34px;border-radius:8px;background:var(--accent-dim);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 34px}
+.act .at{flex:1;font-size:12.5px}
+.act .at .n{color:var(--muted);font-size:11px;margin-top:2px}
+.act .av{font-weight:600;font-variant-numeric:tabular-nums;font-size:13px}
+.collapse{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.collapse summary{cursor:pointer;padding:13px 16px;font-size:13.5px;font-weight:500;color:var(--muted);list-style:none;display:flex;align-items:center;gap:8px}
+.collapse summary::-webkit-details-marker{display:none}
+.collapse[open] summary{color:var(--text);border-bottom:1px solid var(--line)}
+.calc{padding:16px;display:grid;gap:14px}
+.calcrow{display:flex;gap:16px;flex-wrap:wrap}
+.calcrow>div{flex:1;min-width:180px}
+label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:5px}
+.calc input{width:100%}
+.calcout{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px}
+.calcout .k{font-size:11.5px;color:var(--muted)}
+.calcout .v{font-size:19px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+.g{color:var(--good)} .r{color:var(--bad)}
 .savestate{font-size:12px;color:var(--dim)}
-.savestate.syncing{color:var(--warn)}
-.savestate.ok{color:var(--good)}
-@media(max-width:640px){.wrap{padding:18px 14px 60px}.tile .v{font-size:22px}}
+@media(max-width:560px){.wrap{padding:16px 12px 60px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="spread">
+  <div class="topbar">
     <div>
       <h1>Card Cockpit</h1>
-      <p class="sub">COMC &rarr; SlabSharks flip tracker &middot; synced to Supabase &middot; <span id="savestate" class="savestate">connecting&hellip;</span></p>
+      <p class="sub">your live auctions · <span id="savestate" class="savestate">connecting…</span></p>
     </div>
-    <div class="row">
-      <button class="ghost" id="refreshBtn"><i class="ti ti-refresh"></i> refresh</button>
-      <button class="ghost" id="addCardBtn"><i class="ti ti-plus"></i> add card</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="iconbtn" id="refreshBtn" title="reload"><i class="ti ti-refresh"></i></button>
+      <button class="iconbtn" id="bellBtn" title="activity"><i class="ti ti-bell"></i><span class="badge" id="bellBadge" style="display:none">0</span></button>
     </div>
   </div>
 
   <div class="tiles" id="tiles"></div>
 
-  <div class="card">
-    <h2>Send-or-skip calculator</h2>
-    <div class="row" style="gap:18px">
-      <div style="flex:1;min-width:200px">
-        <label>Expected SlabSharks hammer (CAD)</label>
-        <input type="number" id="calcHammer" value="30" step="0.5" />
+  <div class="tabs" id="tabs"></div>
+
+  <div class="toolbar">
+    <div class="search"><i class="ti ti-search"></i><input type="search" id="q" placeholder="search card or player…" /></div>
+    <select id="venue"><option value="">all venues</option><option value="SlabSharks">SlabSharks</option><option value="COMC/eBay">COMC / eBay</option></select>
+    <select id="sort">
+      <option value="bids">most bids</option>
+      <option value="bidhi">highest bid</option>
+      <option value="bidlo">lowest bid</option>
+      <option value="nethi">highest net</option>
+      <option value="name">name A–Z</option>
+    </select>
+    <div class="chip" id="bidsOnly"><i class="ti ti-flame"></i> getting bids</div>
+    <div class="seg"><button id="gridBtn" class="on" title="grid"><i class="ti ti-layout-grid"></i></button><button id="listBtn" title="list"><i class="ti ti-list"></i></button></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <details class="collapse">
+    <summary><i class="ti ti-calculator"></i> send-or-skip calculator</summary>
+    <div class="calc">
+      <div class="calcrow">
+        <div><label>expected SlabSharks hammer (CAD)</label><input type="number" id="calcHammer" value="30" step="0.5" /></div>
+        <div><label>COMC comp / last sale (USD)</label><input type="number" id="calcComp" value="5" step="0.5" /></div>
       </div>
-      <div style="flex:1;min-width:200px">
-        <label>COMC comp / last sale (USD)</label>
-        <input type="number" id="calcComp" value="5" step="0.5" />
-      </div>
+      <div class="calcout" id="calcOut"></div>
+      <p class="mini">SlabSharks net = hammer − 20% − ($3 under $50) − $3 export. COMC net = (comp − fee) × FX. Fee = $0.99 + 4% over $25.</p>
     </div>
-    <div class="calc-out" id="calcOut"></div>
-    <p class="mini" style="margin-top:14px">SlabSharks net = hammer &minus; 20% &minus; ($3 flat if under $50) &minus; $3 export. COMC net = (comp &minus; fee) &times; FX. Fee = $0.99 + 4% over $25.</p>
-  </div>
-
-  <div class="card">
-    <h2><span class="status-dot"></span>Live at auction</h2>
-    <div class="tablewrap">
-      <table id="auctionTable">
-        <thead><tr>
-          <th data-sort="name">card</th><th data-sort="player">player</th><th data-sort="venue">venue</th>
-          <th data-sort="current_bid" class="num">current bid</th><th data-sort="bid_count" class="num">bids</th>
-          <th class="num">net if ends here (CAD)</th><th data-sort="bid_updated">updated</th><th></th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Cards</h2>
-    <div class="filters">
-      <input type="search" id="cardSearch" placeholder="search name / player&hellip;" />
-      <select id="statusFilter"><option value="">all statuses</option></select>
-      <span class="mini" id="cardCount"></span>
-    </div>
-    <div class="tablewrap">
-      <table id="cardsTable">
-        <thead><tr>
-          <th data-sort="name">card</th><th data-sort="player">player</th><th data-sort="status">status</th>
-          <th data-sort="comc_comp_usd" class="num">COMC $</th><th data-sort="expected_hammer_cad" class="num">exp. hammer</th>
-          <th class="num">verdict</th><th data-sort="sold_price_cad" class="num">realized</th><th></th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Shipments</h2>
-    <div class="tablewrap">
-      <table id="shipTable">
-        <thead><tr>
-          <th data-sort="date">date</th><th data-sort="cards" class="num">cards</th><th data-sort="service">service</th>
-          <th data-sort="cost" class="num">cost</th><th class="num">$/card</th><th data-sort="status">status</th><th>notes</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+  </details>
 </div>
-<div class="toast" id="toast"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <h3>activity <button class="iconbtn" id="closeBell" style="width:30px;height:30px;font-size:16px"><i class="ti ti-x"></i></button></h3>
+  <div class="body" id="actBody"></div>
+</aside>
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-const SUPABASE_URL = 'https://jumfzlqrcffrsazgpsol.supabase.co'
-const SUPABASE_KEY = 'sb_publishable_wwHLrxcp5TqGsSobJ-Glpg_0Gw1mYRs'
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
+const sb = createClient('https://jumfzlqrcffrsazgpsol.supabase.co','sb_publishable_wwHLrxcp5TqGsSobJ-Glpg_0Gw1mYRs')
+const $=s=>document.querySelector(s)
+const money=(n,c='$')=>n==null||isNaN(n)?'—':c+Number(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})
+const esc=s=>s==null?'':String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))
+const setSave=(t,c='')=>{const e=$('#savestate');e.textContent=t;e.className='savestate '+c}
 
-const $ = s => document.querySelector(s)
-const money = (n,c='') => n==null||isNaN(n) ? '—' : c+Number(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})
-const setSave = (t,cls='') => { const e=$('#savestate'); e.textContent=t; e.className='savestate '+cls }
-let toastT
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1800) }
+let S={},CARDS=[],EVENTS=[]
+const state={tab:'listed',q:'',venue:'',sort:'bids',bidsOnly:false,view:'grid'}
 
-let S = {}, CARDS = [], SHIPS = []
-let sortKey='name', sortDir=1
-
-function feeCOMC(comp){ if(comp==null) return null; const f = S.comc_fee_flat + (comp>S.comc_fee_thresh ? (comp-S.comc_fee_thresh)*S.comc_fee_pct_over : 0); return (comp-f)*S.fx }
-function netSS(hammer){ if(hammer==null) return null; let n = hammer*(1-S.ss_pct); if(hammer<S.ss_flat_under) n-=S.ss_flat; n-=S.export_cost; return n }
-function isCOMC(c){ return /comc|ebay/i.test(c.venue||'') }
-// venue-aware net CAD if this auction ended at its current bid:
-//  SlabSharks = CAD hammer, 20% + $3-under-$50 + $3 export
-//  COMC/eBay  = USD bid, COMC fee ($0.99 + 4% over $25), then × FX to CAD
-function netFor(c){ return isCOMC(c) ? feeCOMC(c.current_bid) : netSS(c.current_bid) }
-function targetHammer(comcNet){ // hammer where SS net == comcNet (assume under-50 tier)
-  if(comcNet==null) return null; return (comcNet + S.export_cost + (S.ss_flat_under? S.ss_flat:0)) / (1-S.ss_pct) }
+function feeCOMC(b){if(b==null)return null;const f=S.comc_fee_flat+(b>S.comc_fee_thresh?(b-S.comc_fee_thresh)*S.comc_fee_pct_over:0);return (b-f)*S.fx}
+function netSS(h){if(h==null)return null;let n=h*(1-S.ss_pct);if(h<S.ss_flat_under)n-=S.ss_flat;n-=S.export_cost;return n}
+const isCOMC=c=>/comc|ebay/i.test(c.venue||'')
+const netFor=c=>isCOMC(c)?feeCOMC(c.current_bid):netSS(c.current_bid)
+const cur=c=>isCOMC(c)?'US$':'C$'
+const started=c=>c.current_bid>0.99
+function endsText(c){ if(c.notes&&/ends in/i.test(c.notes)) return c.notes.replace(/^ends in\s*/i,'').replace(/(\d+d)(\d+h)?.*/,'$1 $2').trim(); if(c.auction_date) return String(c.auction_date).replace(/\s+\d.*$/,''); return '' }
 
 async function load(){
-  setSave('syncing…','syncing')
-  const [s,c,sh] = await Promise.all([
+  setSave('syncing…','')
+  const [s,c,e]=await Promise.all([
     sb.from('card_settings').select('*').eq('id',1).single(),
-    sb.from('card_cards').select('*').order('created_at',{ascending:true}),
-    sb.from('card_shipments').select('*')
+    sb.from('card_cards').select('*'),
+    sb.from('card_bid_events').select('*').order('at',{ascending:false}).limit(40)
   ])
-  if(s.error||c.error||sh.error){ setSave('connection error','warn'); console.error(s.error||c.error||sh.error); return }
-  S=s.data; CARDS=c.data; SHIPS=sh.data
-  render(); setSave('synced ✓','ok'); setTimeout(()=>setSave('synced'),1500)
+  if(s.error||c.error){setSave('connection error','');console.error(s.error||c.error);return}
+  S=s.data;CARDS=c.data;EVENTS=e.error?[]:e.data
+  render();renderActivity();setSave('synced ✓');setTimeout(()=>setSave('synced'),1500)
 }
 
-function render(){ renderTiles(); renderCalc(); renderAuction(); renderCards(); renderShips(); renderStatusFilter() }
+const TABS=[['listed','live'],['sold','completed'],['scheduled','scheduled']]
+function tabCount(st){ return CARDS.filter(c=>st==='scheduled'?(c.status==='scheduled'||c.status==='queued'):c.status===st).length }
+
+function render(){ renderTiles();renderTabs();renderGrid();renderCalc() }
 
 function renderTiles(){
-  const atAuction = CARDS.filter(c=>c.status==='listed')
-  const bidding = atAuction.filter(c=>c.bid_count>0)
-  const inFlight = SHIPS.filter(s=>s.status==='processing').reduce((a,s)=>a+(s.cards||0),0)
-  const sold = CARDS.filter(c=>c.status==='sold')
-  // live value = net if every card that has moved off its opening bid ended right now
-  const liveNet = atAuction.filter(c=>c.current_bid>0.99).reduce((a,c)=>a+(netFor(c)||0),0)
-  const liveGross = atAuction.reduce((a,c)=>a+(c.current_bid||0),0)
-  const realized = sold.reduce((a,c)=>a+(c.sold_price_cad||0),0)
-  const comcWould = sold.reduce((a,c)=>a+(feeCOMC(c.comc_comp_usd)||0),0)
-  const tiles=[
-    ['at auction', atAuction.length],
-    ['getting bids', bidding.length],
-    ['live bids (gross)', money(liveGross,'$')],
-    ['live value (net)', money(liveNet,'$'), 'good'],
-    ['sold', sold.length],
-    ['realized SS net', money(realized,'$'), 'good'],
-    ['COMC would’ve paid', money(comcWould,'$')]
-  ]
-  $('#tiles').innerHTML = tiles.map(([k,v,cls])=>`<div class="tile"><div class="k">${k}</div><div class="v ${cls||''}">${v}</div></div>`).join('')
+  const live=CARDS.filter(c=>c.status==='listed')
+  const bidding=live.filter(c=>c.bid_count>0)
+  const liveGross=live.reduce((a,c)=>a+(c.current_bid||0),0)
+  const liveNet=live.filter(started).reduce((a,c)=>a+(netFor(c)||0),0)
+  const tiles=[['at auction',live.length],['getting bids',bidding.length],['live bids (gross)',money(liveGross)],['live value (net)',money(liveNet),'good']]
+  $('#tiles').innerHTML=tiles.map(([k,v,cl])=>`<div class="tile"><div class="k">${k}</div><div class="v ${cl||''}">${v}</div></div>`).join('')
+  const nb=bidding.length; const b=$('#bellBadge'); if(nb){b.style.display='flex';b.textContent=nb}else b.style.display='none'
 }
-
-function renderCalc(){
-  const h=parseFloat($('#calcHammer').value), comp=parseFloat($('#calcComp').value)
-  const ss=netSS(h), cm=feeCOMC(isNaN(comp)?null:comp), tgt=targetHammer(cm)
-  const send = ss!=null && cm!=null && ss>=cm
-  $('#calcOut').innerHTML = `
-    <div><div class="k">SlabSharks net</div><div class="v">${money(ss,'$')}</div></div>
-    <div><div class="k">COMC net</div><div class="v">${money(cm,'$')}</div></div>
-    <div><div class="k">verdict</div><div class="v ${send?'g':'r'}">${send?'SEND':'KEEP'}</div></div>
-    <div><div class="k">hammer to beat COMC</div><div class="v">${money(tgt,'$')}</div></div>`
+function renderTabs(){
+  $('#tabs').innerHTML=TABS.map(([st,lbl])=>`<div class="tab ${state.tab===st?'on':''}" data-tab="${st}">${lbl}<span class="n">${tabCount(st)}</span></div>`).join('')
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.tab=t.dataset.tab;render()})
 }
-
-function renderAuction(){
-  const live = CARDS.filter(c=>c.status==='listed').sort((a,b)=>
-    (b.bid_count||0)-(a.bid_count||0) || (b.current_bid||0)-(a.current_bid||0))
-  const rows = live.map(c=>{
-    const started=c.current_bid>0.99
-    const net=started?netFor(c):null
-    const cur=isCOMC(c)?'US$':'C$'
-    return `<tr>
-      <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td><td class="m">${esc(c.venue)||''}</td>
-      <td class="num">${money(c.current_bid,'$')} <span class="mini">${cur}</span></td><td class="num">${c.bid_count??'—'}</td>
-      <td class="num ${net>0?'g':'m'}">${net==null?'<span class="m">—</span>':money(net,'$')+' <span class="mini">C$</span>'}</td>
-      <td class="mini">${esc(c.bid_updated)||'—'}</td>
-      <td>${c.listing_url?`<a class="link" href="${esc(c.listing_url)}" target="_blank" rel="noopener">view <i class="ti ti-external-link"></i></a>`:''}</td>
-    </tr>`
-  }).join('')
-  $('#auctionTable tbody').innerHTML = rows || `<tr><td colspan="8" class="m">no cards at auction</td></tr>`
-}
-
-function sortCards(list){
-  return [...list].sort((a,a2)=>{
-    let x=a[sortKey], y=a2[sortKey]
-    if(x==null)return 1; if(y==null)return -1
-    if(typeof x==='number') return (x-y)*sortDir
-    return String(x).localeCompare(String(y))*sortDir
+function filtered(){
+  let list=CARDS.filter(c=>state.tab==='scheduled'?(c.status==='scheduled'||c.status==='queued'):c.status===state.tab)
+  if(state.venue)list=list.filter(c=>state.venue==='COMC/eBay'?isCOMC(c):c.venue===state.venue)
+  if(state.bidsOnly)list=list.filter(c=>c.bid_count>0)
+  if(state.q){const q=state.q.toLowerCase();list=list.filter(c=>(c.name+' '+(c.player||'')).toLowerCase().includes(q))}
+  const s=state.sort
+  list.sort((a,b)=>{
+    if(s==='bids')return (b.bid_count||0)-(a.bid_count||0)||(b.current_bid||0)-(a.current_bid||0)
+    if(s==='bidhi')return (b.current_bid||0)-(a.current_bid||0)
+    if(s==='bidlo')return (a.current_bid||0)-(b.current_bid||0)
+    if(s==='nethi')return (netFor(b)||-1e9)-(netFor(a)||-1e9)
+    return String(a.name).localeCompare(String(b.name))
   })
+  return list
 }
-function renderCards(){
-  const q=$('#cardSearch').value.toLowerCase(), sf=$('#statusFilter').value
-  let list=CARDS.filter(c=>(!sf||c.status===sf) && (!q || (c.name+' '+(c.player||'')).toLowerCase().includes(q)))
-  list=sortCards(list)
-  $('#cardCount').textContent = `${list.length} of ${CARDS.length}`
-  $('#cardsTable tbody').innerHTML = list.map(c=>{
-    const cm=feeCOMC(c.comc_comp_usd), ss=netSS(c.expected_hammer_cad)
-    let verdict='—'
-    if(cm!=null&&ss!=null) verdict = ss>=cm?`<span class="verdict-send">send</span>`:`<span class="verdict-keep">keep</span>`
-    const pl = c.sold_price_cad!=null && cm!=null ? c.sold_price_cad-cm : null
-    return `<tr>
-      <td>${esc(c.name)}</td><td class="m">${esc(c.player)||''}</td>
-      <td><span class="pill ${c.status}">${c.status}</span></td>
-      <td class="num">${money(c.comc_comp_usd,'$')}</td><td class="num">${money(c.expected_hammer_cad,'$')}</td>
-      <td class="num">${verdict}</td>
-      <td class="num">${c.sold_price_cad!=null?money(c.sold_price_cad,'$'):'—'}${pl!=null?` <span class="mini ${pl>=0?'g':'r'}">${pl>=0?'+':''}${pl.toFixed(0)}</span>`:''}</td>
-      <td><button class="ghost" data-edit="${c.id}" style="padding:4px 8px"><i class="ti ti-edit"></i></button></td>
-    </tr>`
-  }).join('') || `<tr><td colspan="8" class="m">no cards</td></tr>`
-  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editCard(b.dataset.edit))
+function card(c){
+  const net=started(c)?netFor(c):null
+  const vcl=isCOMC(c)?'comc':'ss'; const ends=endsText(c)
+  return `<div class="pcard">
+    <div class="thumb"><i class="ti ti-cards ph"></i>
+      <span class="vchip ${vcl}">${esc(c.venue||'')}</span>
+      ${c.status==='listed'?`<span class="st"><span class="dot"></span>active</span>`:`<span class="st">${esc(c.status)}</span>`}
+    </div>
+    <div class="pbody">
+      <div class="ptitle">${esc(c.name)}</div>
+      <div class="pplayer">${esc(c.player)||'&nbsp;'}${ends?` · ends ${esc(ends)}`:''}</div>
+      <div class="prow"><span>bid <b>${money(c.current_bid)} <span class="mini">${cur(c)}</span></b></span><span>bids <b>${c.bid_count??0}</b></span></div>
+      <div class="prow" style="border-top:0;padding-top:0"><span>net if ends here</span><span class="pnet ${net>0?'':'m'}">${net==null?'—':money(net)+' C$'}</span></div>
+    </div>
+    <div class="pfoot">
+      <span class="mini">upd ${esc(c.bid_updated)||'—'}</span>
+      ${c.listing_url?`<a class="plink" href="${esc(c.listing_url)}" target="_blank" rel="noopener">view <i class="ti ti-external-link"></i></a>`:'<span></span>'}
+    </div>
+  </div>`
 }
-
-function renderShips(){
-  $('#shipTable tbody').innerHTML = SHIPS.map(s=>`<tr>
-    <td>${esc(s.date)||'—'}</td><td class="num">${s.cards??'—'}</td><td class="m">${esc(s.service)||''}</td>
-    <td class="num">${money(s.cost,'$')}</td><td class="num">${s.cost&&s.cards?money(s.cost/s.cards,'$'):'—'}</td>
-    <td><span class="pill ${s.status==='delivered'?'sold':'queued'}">${esc(s.status)||''}</span></td>
-    <td class="mini">${esc(s.notes)||''}</td></tr>`).join('')
+function renderGrid(){
+  const list=filtered()
+  const g=$('#grid'); g.className='grid'+(state.view==='list'?' list':'')
+  g.innerHTML=list.length?list.map(card).join(''):`<div class="empty">no cards match</div>`
 }
-
-function renderStatusFilter(){
-  const cur=$('#statusFilter').value
-  const st=[...new Set(CARDS.map(c=>c.status))]
-  $('#statusFilter').innerHTML = `<option value="">all statuses</option>`+st.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join('')
+function renderActivity(){
+  const body=$('#actBody')
+  let html=''
+  if(EVENTS.length){
+    html+=EVENTS.map(e=>{const d=(e.new_bid||0)-(e.old_bid||0);return `<div class="act"><div class="ai"><i class="ti ti-trending-up"></i></div><div class="at"><div>${esc(e.player||e.name)} <span class="mini">${esc(e.venue||'')}</span></div><div class="n">${esc(e.name)}</div></div><div class="av">${money(e.new_bid)}${d>0?` <span class="mini g">+${d.toFixed(0)}</span>`:''}</div></div>`}).join('')
+  }
+  // fallback: current live bids (immediate content until deltas accrue)
+  const bidding=CARDS.filter(c=>c.status==='listed'&&c.bid_count>0).sort((a,b)=>(b.bid_count||0)-(a.bid_count||0)||(b.current_bid||0)-(a.current_bid||0))
+  html+=`<div class="mini" style="padding:12px 18px 4px;color:var(--dim)">${EVENTS.length?'current standings':'live bids (change history starts logging on the next refresh)'}</div>`
+  html+=bidding.map(c=>`<div class="act"><div class="ai"><i class="ti ti-gavel"></i></div><div class="at"><div>${esc(c.player||'')} <span class="mini">${esc(c.venue||'')}</span></div><div class="n">${esc(c.name)}</div></div><div class="av">${money(c.current_bid)} <span class="mini">${cur(c)} · ${c.bid_count} bid${c.bid_count===1?'':'s'}</span></div></div>`).join('')||`<div class="empty">no bids yet</div>`
+  body.innerHTML=html
 }
-
-function esc(s){ return s==null?'':String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])) }
-
-async function editCard(id){
-  const c=CARDS.find(x=>x.id===id); if(!c)return
-  const name=prompt('Card name',c.name); if(name===null)return
-  const player=prompt('Player',c.player||'')
-  const status=prompt('Status (scheduled/listed/sold/queued)',c.status)
-  const comp=prompt('COMC comp USD (blank = none)',c.comc_comp_usd??'')
-  const hammer=prompt('Expected hammer CAD (blank = none)',c.expected_hammer_cad??'')
-  const sold=prompt('Sold price CAD (blank = none)',c.sold_price_cad??'')
-  const patch={name,player,status,comc_comp_usd:comp===''?null:parseFloat(comp),expected_hammer_cad:hammer===''?null:parseFloat(hammer),sold_price_cad:sold===''?null:parseFloat(sold),updated_at:new Date().toISOString()}
-  setSave('saving…','syncing')
-  const {error}=await sb.from('card_cards').update(patch).eq('id',id)
-  if(error){ setSave('save failed','warn'); toast('save failed'); return }
-  Object.assign(c,patch); render(); setSave('saved ✓','ok'); toast('saved')
+function renderCalc(){
+  const h=parseFloat($('#calcHammer').value),comp=parseFloat($('#calcComp').value)
+  const ss=netSS(h),cm=feeCOMC(isNaN(comp)?null:comp)
+  const tgt=cm==null?null:(cm+S.export_cost+S.ss_flat)/(1-S.ss_pct)
+  const send=ss!=null&&cm!=null&&ss>=cm
+  $('#calcOut').innerHTML=`<div><div class="k">SlabSharks net</div><div class="v">${money(ss)}</div></div><div><div class="k">COMC net</div><div class="v">${money(cm)}</div></div><div><div class="k">verdict</div><div class="v ${send?'g':'r'}">${send?'SEND':'KEEP'}</div></div><div><div class="k">hammer to beat COMC</div><div class="v">${money(tgt)}</div></div>`
 }
 
-async function addCard(){
-  const name=prompt('New card name'); if(!name)return
-  const id='n'+Date.now().toString(36)
-  const row={id,name,status:'scheduled',venue:'SlabSharks'}
-  setSave('saving…','syncing')
-  const {error}=await sb.from('card_cards').insert(row)
-  if(error){ setSave('add failed','warn'); toast('add failed'); return }
-  CARDS.push(row); render(); setSave('saved ✓','ok'); toast('card added')
-}
-
-$('#calcHammer').oninput=renderCalc; $('#calcComp').oninput=renderCalc
-$('#cardSearch').oninput=renderCards; $('#statusFilter').onchange=renderCards
-$('#refreshBtn').onclick=load; $('#addCardBtn').onclick=addCard
-document.querySelectorAll('th[data-sort]').forEach(th=>th.onclick=()=>{
-  const k=th.dataset.sort; sortDir = sortKey===k?-sortDir:1; sortKey=k; renderCards()
-})
+$('#q').oninput=e=>{state.q=e.target.value;renderGrid()}
+$('#venue').onchange=e=>{state.venue=e.target.value;renderGrid()}
+$('#sort').onchange=e=>{state.sort=e.target.value;renderGrid()}
+$('#bidsOnly').onclick=e=>{state.bidsOnly=!state.bidsOnly;e.currentTarget.classList.toggle('on',state.bidsOnly);renderGrid()}
+$('#gridBtn').onclick=()=>{state.view='grid';$('#gridBtn').classList.add('on');$('#listBtn').classList.remove('on');renderGrid()}
+$('#listBtn').onclick=()=>{state.view='list';$('#listBtn').classList.add('on');$('#gridBtn').classList.remove('on');renderGrid()}
+$('#calcHammer').oninput=renderCalc;$('#calcComp').oninput=renderCalc
+$('#refreshBtn').onclick=load
+const openDrawer=o=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o)}
+$('#bellBtn').onclick=()=>openDrawer(true);$('#closeBell').onclick=()=>openDrawer(false);$('#scrim').onclick=()=>openDrawer(false)
 load()
 </script>
 </body>
