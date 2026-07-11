@@ -125,6 +125,7 @@ label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:5px}
     <div class="chip venuechip" data-venue="COMC/eBay"><i class="ti ti-brand-ebay"></i> COMC · eBay</div>
     <select id="sort">
       <option value="bids">most bids</option>
+      <option value="ending">ending soon</option>
       <option value="bidhi">highest bid</option>
       <option value="bidlo">lowest bid</option>
       <option value="nethi">highest net</option>
@@ -151,7 +152,7 @@ label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:5px}
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer">
-  <h3>activity <button class="iconbtn" id="closeBell" style="width:30px;height:30px;font-size:16px"><i class="ti ti-x"></i></button></h3>
+  <h3>activity <span style="display:flex;gap:6px;align-items:center"><button class="chip" id="clearBell" style="padding:5px 11px;font-size:11.5px"><i class="ti ti-check"></i> clear</button><button class="iconbtn" id="closeBell" style="width:30px;height:30px;font-size:16px"><i class="ti ti-x"></i></button></span></h3>
   <div class="body" id="actBody"></div>
 </aside>
 
@@ -171,6 +172,7 @@ function feeCOMC(b){if(b==null)return null;const f=(b<S.comc_fee_thresh)?S.comc_
 function netSS(h){if(h==null)return null;let n=h*(1-S.ss_pct);if(h<S.ss_flat_under)n-=S.ss_flat;n-=S.export_cost;return n}
 const isCOMC=c=>/comc|ebay/i.test(c.venue||'')
 const venueMatch=c=>!state.venue||(state.venue==='COMC/eBay'?isCOMC(c):c.venue===state.venue)
+function endMs(c){ if(c.ends_at){const t=new Date(c.ends_at).getTime();if(!isNaN(t))return t} const m=(c.notes||'').match(/ends in\s*(\d+)d(?:\s*(\d+)h)?/i); if(m)return Date.now()+(parseInt(m[1])*24+parseInt(m[2]||'0'))*3600e3; if(c.auction_date){const t=new Date(c.auction_date).getTime();if(!isNaN(t))return t} return Infinity }
 const netFor=c=>isCOMC(c)?feeCOMC(c.current_bid):netSS(c.current_bid)
 const cur=c=>isCOMC(c)?'US$':'C$'
 const started=c=>c.current_bid>0.99
@@ -216,6 +218,7 @@ function filtered(){
   if(state.q){const q=state.q.toLowerCase();list=list.filter(c=>(c.name+' '+(c.player||'')).toLowerCase().includes(q))}
   const s=state.sort
   list.sort((a,b)=>{
+    if(s==='ending')return endMs(a)-endMs(b)
     if(s==='bids')return (b.bid_count||0)-(a.bid_count||0)||(b.current_bid||0)-(a.current_bid||0)
     if(s==='bidhi')return (b.current_bid||0)-(a.current_bid||0)
     if(s==='bidlo')return (a.current_bid||0)-(b.current_bid||0)
@@ -251,13 +254,15 @@ function renderGrid(){
 }
 function renderActivity(){
   const body=$('#actBody')
+  const clearedAt=+(localStorage.getItem('cc_clearedAt')||0)
+  const evs=EVENTS.filter(e=>new Date(e.at).getTime()>clearedAt)
   let html=''
-  if(EVENTS.length){
-    html+=EVENTS.map(e=>{const d=(e.new_bid||0)-(e.old_bid||0);return `<div class="act"><div class="ai"><i class="ti ti-trending-up"></i></div><div class="at"><div>${esc(e.player||e.name)} <span class="mini">${esc(e.venue||'')}</span></div><div class="n">${esc(e.name)}</div></div><div class="av">${money(e.new_bid)}${d>0?` <span class="mini g">+${d.toFixed(0)}</span>`:''}</div></div>`}).join('')
+  if(evs.length){
+    html+=evs.map(e=>{const d=(e.new_bid||0)-(e.old_bid||0);return `<div class="act"><div class="ai"><i class="ti ti-trending-up"></i></div><div class="at"><div>${esc(e.player||e.name)} <span class="mini">${esc(e.venue||'')}</span></div><div class="n">${esc(e.name)}</div></div><div class="av">${money(e.new_bid)}${d>0?` <span class="mini g">+${d.toFixed(0)}</span>`:''}</div></div>`}).join('')
   }
   // fallback: current live bids (immediate content until deltas accrue)
   const bidding=CARDS.filter(c=>c.status==='listed'&&c.bid_count>0).sort((a,b)=>(b.bid_count||0)-(a.bid_count||0)||(b.current_bid||0)-(a.current_bid||0))
-  html+=`<div class="mini" style="padding:12px 18px 4px;color:var(--dim)">${EVENTS.length?'current standings':'live bids (change history starts logging on the next refresh)'}</div>`
+  html+=`<div class="mini" style="padding:12px 18px 4px;color:var(--dim)">${evs.length?'current standings':'live bids (recent changes clear when you hit ✓)'}</div>`
   html+=bidding.map(c=>`<div class="act"><div class="ai"><i class="ti ti-gavel"></i></div><div class="at"><div>${esc(c.player||'')} <span class="mini">${esc(c.venue||'')}</span></div><div class="n">${esc(c.name)}</div></div><div class="av">${money(c.current_bid)} <span class="mini">${cur(c)} · ${c.bid_count} bid${c.bid_count===1?'':'s'}</span></div></div>`).join('')||`<div class="empty">no bids yet</div>`
   body.innerHTML=html
 }
@@ -279,6 +284,7 @@ $('#calcHammer').oninput=renderCalc;$('#calcComp').oninput=renderCalc
 $('#refreshBtn').onclick=load
 const openDrawer=o=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);if(o){localStorage.setItem('cc_lastSeen',Date.now());renderBadge()}}
 $('#bellBtn').onclick=()=>openDrawer(true);$('#closeBell').onclick=()=>openDrawer(false);$('#scrim').onclick=()=>openDrawer(false)
+$('#clearBell').onclick=()=>{const now=Date.now();localStorage.setItem('cc_clearedAt',now);localStorage.setItem('cc_lastSeen',now);renderActivity();renderBadge()}
 load()
 </script>
 </body>
