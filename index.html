@@ -64,6 +64,9 @@ input:focus,select:focus{border-color:var(--accent)}
 .pfoot{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:1px solid var(--line);background:var(--surface2)}
 .plink{color:var(--accent);font-size:11.5px;display:inline-flex;align-items:center;gap:4px}
 .mini{font-size:10.5px;color:var(--dim)}
+.pcd{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:3px}
+.pcd i{font-size:12px}
+.pcd.soon{color:var(--warn)} .pcd.urgent{color:var(--bad);font-weight:600} .pcd.ended{color:var(--dim)}
 /* list mode row */
 .grid.list .pcard{flex-direction:row;align-items:stretch}
 .grid.list .thumb{width:90px;height:auto;border-bottom:0;border-right:1px solid var(--line);flex:0 0 90px}
@@ -174,7 +177,7 @@ function feeCOMC(b){if(b==null)return null;const f=(b<S.comc_fee_thresh)?S.comc_
 function netSS(h){if(h==null)return null;let n=h*(1-S.ss_pct);if(h<S.ss_flat_under)n-=S.ss_flat;n-=S.export_cost;return n}
 const isCOMC=c=>/comc|ebay/i.test(c.venue||'')
 const venueMatch=c=>!state.venue||(state.venue==='COMC/eBay'?isCOMC(c):c.venue===state.venue)
-function endMs(c){ if(c.ends_at){const t=new Date(c.ends_at).getTime();if(!isNaN(t))return t} const m=(c.notes||'').match(/ends in\s*(\d+)d(?:\s*(\d+)h)?/i); if(m)return Date.now()+(parseInt(m[1])*24+parseInt(m[2]||'0'))*3600e3; if(c.auction_date){const t=new Date(c.auction_date).getTime();if(!isNaN(t))return t} return Infinity }
+function endMs(c){ if(c.ends_at){const t=new Date(c.ends_at).getTime();if(!isNaN(t))return t} return Infinity }
 const netFor=c=>isCOMC(c)?feeCOMC(c.current_bid):netSS(c.current_bid)
 const cur=c=>isCOMC(c)?'US$':'C$'
 const started=c=>c.current_bid>0.99
@@ -234,6 +237,7 @@ function filtered(){
 function card(c){
   const net=started(c)?netFor(c):null
   const vcl=isCOMC(c)?'comc':'ss'; const ends=endsText(c)
+  const ei=(c.status==='listed'&&c.ends_at)?new Date(c.ends_at).getTime():null
   return `<div class="pcard">
     <div class="thumb">${c.image_url?`<img class="pimg" src="${esc(c.image_url)}" alt="" loading="lazy" onerror="this.remove()">`:''}<i class="ti ti-cards ph"></i>
       <span class="vchip ${vcl}">${esc(c.venue||'')}</span>
@@ -241,7 +245,7 @@ function card(c){
     </div>
     <div class="pbody">
       <div class="ptitle">${esc(c.name)}</div>
-      <div class="pplayer">${esc(c.player)||'&nbsp;'}${ends?` · ends ${esc(ends)}`:''}</div>
+      <div class="pplayer">${esc(c.player)||'&nbsp;'}${ei?` · <span class="pcd" data-ends="${ei}"><i class="ti ti-clock"></i><span class="cdtext"></span></span>`:(ends?` · ends ${esc(ends)}`:'')}</div>
       <div class="prow"><span>bid <b>${money(c.current_bid)} <span class="mini">${cur(c)}</span></b></span><span>bids <b>${c.bid_count??0}</b></span></div>
       <div class="prow" style="border-top:0;padding-top:0"><span>net if ends here</span><span class="pnet ${net>0?'':'m'}">${net==null?'—':money(net)+' C$'}</span></div>
     </div>
@@ -251,10 +255,29 @@ function card(c){
     </div>
   </div>`
 }
+function fmtLeft(ms){
+  if(ms<=0)return {t:'ended',cls:'ended'}
+  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60
+  let t
+  if(d>0)t=`${d}d ${h}h ${m}m`
+  else if(h>0)t=`${h}h ${String(m).padStart(2,'0')}m ${String(ss).padStart(2,'0')}s`
+  else t=`${m}m ${String(ss).padStart(2,'0')}s`
+  return {t, cls: ms<600000?'urgent':ms<3600000?'soon':''}
+}
+function tickAll(){
+  const now=Date.now()
+  document.querySelectorAll('.pcd').forEach(el=>{
+    const end=+el.dataset.ends; if(!end)return
+    const {t,cls}=fmtLeft(end-now)
+    el.className='pcd '+cls
+    const tx=el.querySelector('.cdtext'); if(tx)tx.textContent=t
+  })
+}
 function renderGrid(){
   const list=filtered()
   const g=$('#grid'); g.className='grid'+(state.view==='list'?' list':'')
   g.innerHTML=list.length?list.map(card).join(''):`<div class="empty">no cards match</div>`
+  tickAll()
 }
 function renderActivity(){
   const body=$('#actBody')
@@ -289,6 +312,7 @@ $('#refreshBtn').onclick=async()=>{const ic=$('#refreshBtn').querySelector('i');
 const openDrawer=o=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o);if(o){localStorage.setItem('cc_lastSeen',Date.now());renderBadge()}}
 $('#bellBtn').onclick=()=>openDrawer(true);$('#closeBell').onclick=()=>openDrawer(false);$('#scrim').onclick=()=>openDrawer(false)
 $('#clearBell').onclick=()=>{const now=Date.now();localStorage.setItem('cc_clearedAt',now);localStorage.setItem('cc_lastSeen',now);renderActivity();renderBadge()}
+setInterval(tickAll,1000)
 load()
 </script>
 </body>
