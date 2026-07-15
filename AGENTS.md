@@ -16,3 +16,14 @@ Selected/active = Avansai green `#22FF88`.
 ## Workflow
 Local: `npm start` (server.js). Deploy = push to the public GitHub repo (Pages serves it).
 Done = verified on the live page → committed + pushed.
+
+
+## Anti-drift doctrine (2026-07-14, learned the hard way)
+
+- Every file an app renders has ONE canonical writer. Before writing such a file,
+  find that producer and match its schema exactly (or invoke it). Two writers for
+  one file is the bug, even if the data looks right.
+- Decision-of-record docs (ENVIRONMENT.md / README contracts) outrank code comments
+  and old commit messages. If they conflict, STOP and reconcile — don't obey either.
+- Run artifacts (raw pulls, intermediates, backups) go to durable archive dirs inside
+  the repo, never /tmp or scratch dirs (a tmp wipe destroyed run data on 07-14).
